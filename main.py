@@ -3,6 +3,7 @@ from tkinter import messagebox
 import random
 import pyperclip
 import webbrowser
+import json
 
 url = "https://www.linkedin.com/in/oluwatobisamueladegoke/"
 # **********************************************Generating Passwords***************************************** #
@@ -35,22 +36,50 @@ def generate():
 
 # **********************************************Saving Passwords********************************************* #
 def save_data():
-    file = open("./my_credentials.txt", "a")
+
     website_field = website_entry.get()
     username_field = username_entry.get()
     password_field = pword_entry.get()
+    new_data = {
+        website_field: {
+            "email": username_field,
+            "password": password_field
+        }
+    }
 
-    if (not (website_field and website_field.strip())) or (not (username_field and username_field.strip())) or (not (password_field and password_field.strip())): # checking is any of the field is empty or just spaces
+    if (not (website_field and website_field.strip())) or (not (username_field and username_field.strip())) or \
+            (not (password_field and password_field.strip())): # checking is any of the field is empty or just spaces
         messagebox.showerror(title="🚫  Oops!!  🚫", message="Please complete all the fields!")
 
     else:
-        info_ok = messagebox.askokcancel(title=website_field, message=f"Please confirm the details below are correct and ready to save\n\nUsername: {username_field}\nPassword: {password_field}")
+        info_ok = messagebox.askokcancel(title=website_field, message=f"Please confirm the details below are correct "
+        f"and ready to save\n\nUsername: {username_field}\nPassword: {password_field}")
 
         if info_ok:
-            file.write(f"{website_field} | {username_field} | {password_field}\n")
-            website_entry.delete(0, END)
-            username_entry.delete(0, END)
-            pword_entry.delete(0, END)
+            # file.write(f"{website_field} | {username_field} | {password_field}\n")
+
+            # Reading the old file
+            try:
+                file = open("./my_credentials.json", "r")
+                data = json.load(file)
+
+            except FileNotFoundError:
+            # Creating the file if it doesn't exit
+                file = open("./my_credentials.json", "w")
+                json.dump(new_data, file, indent=4)
+
+            else:
+                # Updating the old file
+                data.update(new_data)
+
+                # Saving the new data to the old file i.e writing
+                file = open("./my_credentials.json", "w")
+                json.dump(data, file, indent=4)
+
+            finally:
+                website_entry.delete(0, END)
+                username_entry.delete(0, END)
+                pword_entry.delete(0, END)
 
 # **********************************************URL Callback****************************************************** #
 
@@ -66,7 +95,7 @@ window.config(padx=50, pady=50, bg='black')
 icon = PhotoImage(file="icon.png")
 window.iconphoto(False, icon)
 
-canvas = Canvas(width=300, height=300, highlightthickness=0, bg='black')
+canvas = Canvas(width=250, height=230, highlightthickness=0, bg='black')
 logo = PhotoImage(file='logo.png')
 canvas.create_image(150, 150, image=logo)
 canvas.grid(row=0, column=1)
