@@ -86,6 +86,10 @@ def save_data():
 def callback(url):
     webbrowser.open_new_tab(url)
 
+# **********************************************Searching for information****************************************************** #
+
+def search():
+    pass
 
 # **********************************************User Interface Setup********************************************* #
 
@@ -95,7 +99,7 @@ window.config(padx=50, pady=50, bg='black')
 icon = PhotoImage(file="icon.png")
 window.iconphoto(False, icon)
 
-canvas = Canvas(width=250, height=230, highlightthickness=0, bg='black')
+canvas = Canvas(width=250, height=350, highlightthickness=0, bg='black')
 logo = PhotoImage(file='logo.png')
 canvas.create_image(150, 150, image=logo)
 canvas.grid(row=0, column=1)
@@ -103,9 +107,13 @@ canvas.grid(row=0, column=1)
 website_label = Label(text='Website:', font=('tahoma', 10, 'bold'), bg='black', fg='white')
 website_label.grid(row=1, column=0, pady=(10, 10))
 
-website_entry = Entry(width=65, bg='#95D1CC', font="Helvetica 10 bold")
-website_entry.grid(row=1, column=1, columnspan=2)
+website_entry = Entry(width=50, bg='#95D1CC', font="Helvetica 10 bold")
+website_entry.grid(row=1, column=1)
 website_entry.focus()
+
+search_btn = Button(text='Search', bg='#E2D784', font=('Courier', 10, 'bold'), bd=5, command=search)
+search_btn.grid(row=1, column=2)
+
 
 username_label = Label(text='Email/Username:', font=('calibre', 10, 'bold'), bg='black', fg='white')
 username_label.grid(row=2, column=0, pady=(10, 10))
@@ -123,7 +131,7 @@ generate_btn = Button(text='Generate', bg='#E2D784', font=('Courier', 10, 'bold'
 generate_btn.grid(row=3, column=2)
 
 save_btn = Button(text='save', width=36, bg='#006778', font=('Courier', 10, 'bold'), fg='white', bd=10, command=save_data)
-save_btn.grid(row=4, column=1, columnspan=2)
+save_btn.grid(row=4, column=1)
 
 attribution = Label(text="© sammiie.com", font=('Helvetica', 10, 'bold'))
 attribution.grid(row=5, column=1, pady=(55, 5))
