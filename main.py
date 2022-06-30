@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import messagebox
+from tkinter import font
 import random
 import pyperclip
 import webbrowser
@@ -42,13 +43,13 @@ def save_data():
     password_field = pword_entry.get()
     new_data = {
         website_field: {
-            "email": username_field,
+            "username": username_field,
             "password": password_field
         }
     }
 
     if (not (website_field and website_field.strip())) or (not (username_field and username_field.strip())) or \
-            (not (password_field and password_field.strip())): # checking is any of the field is empty or just spaces
+            (not (password_field and password_field.strip())): # checking if any of the field is empty or just spaces
         messagebox.showerror(title="🚫  Oops!!  🚫", message="Please complete all the fields!")
 
     else:
@@ -56,6 +57,7 @@ def save_data():
         f"and ready to save\n\nUsername: {username_field}\nPassword: {password_field}")
 
         if info_ok:
+            messagebox.showinfo("info", "Successfully Saved👍")
             # file.write(f"{website_field} | {username_field} | {password_field}\n")
 
             # Reading the old file
@@ -89,49 +91,59 @@ def callback(url):
 # **********************************************Searching for information****************************************************** #
 
 def search():
-    pass
+    website_field = website_entry.get()
+    file = open("./my_credentials.json", "r")
+    data = json.load(file)
+    if website_field in data:       # checking if the search term is in the credential file (key)
+        # messagebox.showinfo("Result", f"username: {data[website_field]['username']}\n Password: {data[website_field]['password']}")
+        output = "\n".join(f"{key}: {data[website_field][key]}" for key in data[website_field].keys())
+        messagebox.showinfo("Result", f"{output}")
+
+    else:
+        messagebox.showinfo("Not Found", "Website is Not Found")
+
 
 # **********************************************User Interface Setup********************************************* #
 
 window = Tk()
 window.title("Password Manager")
-window.config(padx=50, pady=50, bg='black')
+window.config(padx=50, pady=50, bg='#545454')
 icon = PhotoImage(file="icon.png")
 window.iconphoto(False, icon)
 
-canvas = Canvas(width=250, height=350, highlightthickness=0, bg='black')
-logo = PhotoImage(file='logo.png')
-canvas.create_image(150, 150, image=logo)
+canvas = Canvas(width=200, height=200, highlightthickness=0, bg='#545454')
+logo = PhotoImage(file='logo2.png')
+canvas.create_image(110, 100, image=logo)
 canvas.grid(row=0, column=1)
 
-website_label = Label(text='Website:', font=('tahoma', 10, 'bold'), bg='black', fg='white')
+
+# *************************Labels******************************
+
+website_label = Label(text='Website:', font=('Arial Black', 12, 'bold'), bg='#545454', fg='#06113C')
 website_label.grid(row=1, column=0, pady=(10, 10))
-
-website_entry = Entry(width=50, bg='#95D1CC', font="Helvetica 10 bold")
-website_entry.grid(row=1, column=1)
-website_entry.focus()
-
-search_btn = Button(text='Search', bg='#E2D784', font=('Courier', 10, 'bold'), bd=5, command=search)
-search_btn.grid(row=1, column=2)
-
-
-username_label = Label(text='Email/Username:', font=('calibre', 10, 'bold'), bg='black', fg='white')
+username_label = Label(text='Username:', font=('Arial Black', 12, 'bold'), bg='#545454', fg='#06113C')
 username_label.grid(row=2, column=0, pady=(10, 10))
-
-username_entry = Entry(width=65, bg='#95D1CC', font="Helvetica 10 bold")
-username_entry.grid(row=2, column=1, columnspan=2)
-
-pword_label = Label(text='Password:', font=('calibre', 10, 'bold'), bg='black', fg='white')
+pword_label = Label(text='Password:', font=('Arial Black', 12, 'bold'), bg='#545454', fg='#06113C')
 pword_label.grid(row=3, column=0, pady=(10, 10))
 
-pword_entry = Entry(width=50, bg='green', font="Helvetica 10 bold")
+# *************************Entries******************************
+
+website_entry = Entry(width=21, bg='#95D1CC', font="Helvetica 10 bold")
+website_entry.grid(row=1, column=1)
+website_entry.focus()
+username_entry = Entry(width=38, bg='#95D1CC', font="Helvetica 10 bold")
+username_entry.grid(row=2, column=1, columnspan=2)
+pword_entry = Entry(width=21, bg='black', font="Helvetica 10 bold", fg='white')
 pword_entry.grid(row=3, column=1)
 
-generate_btn = Button(text='Generate', bg='#E2D784', font=('Courier', 10, 'bold'), bd=5, command=generate)
-generate_btn.grid(row=3, column=2)
+# *************************Buttons******************************
 
-save_btn = Button(text='save', width=36, bg='#006778', font=('Courier', 10, 'bold'), fg='white', bd=10, command=save_data)
-save_btn.grid(row=4, column=1)
+search_btn = Button(text='Search', width=13, bg='#E2D784', font=('Courier', 10, 'bold'), bd=5, command=search)
+search_btn.grid(row=1, column=2)
+generate_btn = Button(text='Generate', width=13, bg='#E2D784', font=('Courier', 10, 'bold'), bd=5, command=generate)
+generate_btn.grid(row=3, column=2)
+save_btn = Button(text='save', width=13, bg='#006778', font=('Courier', 10, 'bold'), fg='white', bd=10, command=save_data)
+save_btn.grid(row=4, column=1, pady=(20, 1))
 
 attribution = Label(text="© sammiie.com", font=('Helvetica', 10, 'bold'))
 attribution.grid(row=5, column=1, pady=(55, 5))
