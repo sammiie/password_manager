@@ -34,6 +34,7 @@ def generate():
     password = "".join(random.sample(p_string, len(p_string)))
     pword_entry.insert(0, password)
     pyperclip.copy(password)  # putting the password on clipboard
+    messagebox.showinfo("Info", "Password has been Generated and Copied to clipboard")
 
 # **********************************************Saving Passwords********************************************* #
 def save_data():
@@ -91,16 +92,20 @@ def callback(url):
 # **********************************************Searching for information****************************************************** #
 
 def search():
-    website_field = website_entry.get()
-    file = open("./my_credentials.json", "r")
-    data = json.load(file)
-    if website_field in data:       # checking if the search term is in the credential file (key)
-        # messagebox.showinfo("Result", f"username: {data[website_field]['username']}\n Password: {data[website_field]['password']}")
-        output = "\n".join(f"{key}: {data[website_field][key]}" for key in data[website_field].keys())
-        messagebox.showinfo("Result", f"{output}")
+    try:
+        website_field = website_entry.get()
+        file = open("./my_credentials.json", "r")
+        data = json.load(file)
 
-    else:
-        messagebox.showinfo("Not Found", "Website is Not Found")
+        if website_field in data:       # checking if the search term is in the credential file (key)
+            # messagebox.showinfo("Result", f"username: {data[website_field]['username']}\n Password: {data[website_field]['password']}")
+            output = "\n".join(f"{key}: {data[website_field][key]}" for key in data[website_field].keys())
+            messagebox.showinfo("Result", f"{output}")
+
+        else:
+            messagebox.showinfo("Not Found", "Website is Not Found")
+    except FileNotFoundError:
+        messagebox.showinfo("Info", "No file Found!")
 
 
 # **********************************************User Interface Setup********************************************* #
@@ -131,7 +136,7 @@ pword_label.grid(row=3, column=0, pady=(10, 10))
 website_entry = Entry(width=21, bg='#95D1CC', font="Helvetica 10 bold")
 website_entry.grid(row=1, column=1)
 website_entry.focus()
-username_entry = Entry(width=38, bg='#95D1CC', font="Helvetica 10 bold")
+username_entry = Entry(width=44, bg='#95D1CC', font="Helvetica 10 bold")
 username_entry.grid(row=2, column=1, columnspan=2)
 pword_entry = Entry(width=21, bg='black', font="Helvetica 10 bold", fg='white')
 pword_entry.grid(row=3, column=1)
@@ -140,7 +145,7 @@ pword_entry.grid(row=3, column=1)
 
 search_btn = Button(text='Search', width=13, bg='#E2D784', font=('Courier', 10, 'bold'), bd=5, command=search)
 search_btn.grid(row=1, column=2)
-generate_btn = Button(text='Generate', width=13, bg='#E2D784', font=('Courier', 10, 'bold'), bd=5, command=generate)
+generate_btn = Button(text='Generate Password',  bg='#E2D784', font=('Courier', 10, 'bold'), bd=5, command=generate)
 generate_btn.grid(row=3, column=2)
 save_btn = Button(text='save', width=13, bg='#006778', font=('Courier', 10, 'bold'), fg='white', bd=10, command=save_data)
 save_btn.grid(row=4, column=1, pady=(20, 1))
